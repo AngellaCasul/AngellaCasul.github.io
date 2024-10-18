@@ -151,16 +151,16 @@
         <input id="guess" type="number" placeholder="Enter your guess" />
         <button id="guess-button"><strong>Try Your Luck :)</strong></button>
         <p id="result"></p>
-        <p id="attempts" style="color: greenyellow;">Leaves left: 15</p> <!-- Updated to show leaves left -->
+        <p id="attempts" style="color: greenyellow;">Leaves left: 20</p> <!-- Updated to show leaves left -->
         <button id="restart-button"><strong>Restart Game?</strong></button>
     </div>
 
     <div class="difficulty-levels">
         <h1 style="color: #e1a50d;">Difficulty Guide:</h1>
-        <p style="text-align: left;"><strong style="color: greenyellow;">Easy: </strong>max attempts: 15; numbers: 1-100</p>
-        <p style="text-align: left;"><strong style="color: orange;">Medium: </strong>max attempts: 10; numbers: 1-500</p>
-        <p style="text-align: left;"><strong style="color: red;">Hard: </strong>max attempts: 10; numbers: 1-1000</p>
-        <p style="text-align: left;"><strong style="color: rgb(181, 0, 0);">Hardest: </strong>max attempts: 5; numbers: 1-1000</p>
+        <p style="text-align: left;"><strong style="color: greenyellow;">Easy: </strong>max attempts: 20</p>
+        <p style="text-align: left;"><strong style="color: orange;">Medium: </strong>max attempts: 15</p>
+        <p style="text-align: left;"><strong style="color: red;">Hard: </strong>max attempts: 10</p>
+        <p style="text-align: left;"><strong style="color: rgb(181, 0, 0);">Hardest: </strong>max attempts: 5</p>
     </div>
 
     <!-- PyScript to handle the game logic -->
@@ -170,7 +170,7 @@
     
         # Initialize game variables
         number_to_guess = random.randint(1, 1000)
-        max_attempts = 15
+        max_attempts = 20
         attempts = 0
         game_over = False  # New flag to check if the game is over
     
@@ -178,10 +178,10 @@
         def set_difficulty(level):
             global max_attempts, number_to_guess
             if level == "easy":
-                max_attempts = 15
+                max_attempts = 20
                 number_to_guess = random.randint(1, 100)  # Wide range
             elif level == "medium":
-                max_attempts = 10
+                max_attempts = 15
                 number_to_guess = random.randint(1, 500)  # Standard range
             elif level == "hard":
                 max_attempts = 10
@@ -260,11 +260,11 @@
             # Putting the clues
             difference = abs(guess - number_to_guess)
             if difference > 50:
-                clue = "You're getting there."
+                clue = "Don't worry, you're getting there!"
             elif difference > 20:
-                clue = "You're really close!"
-            elif difference > 10:
                 clue = "Almost there..."
+            elif difference > 10:
+                clue = "You're getting close!"
             else:
                 clue = "You're extremely close!"
     
