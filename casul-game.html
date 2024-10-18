@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Thousandfold Treasure: Gatekeeper's Challenge!</title>
+    <!-- Load PyScript -->
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css">
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #182330;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .game-container {
+            background-color: #584935;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            border: 2px solid rgb(45, 35, 25);
+        }
+        
+        .glow1 {
+            text-shadow: 0 0 15px #f9e9b3;
+        }
+        
+        .glow2 {
+            text-shadow: 0 0 15px #ad1212;
+        }
+        input {
+            width: 500px;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #7c6749;
+            color: black;
+            padding: 12px;
+            border: 2px solid black;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 523px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #FAC898;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        p {
+            font-family: cursive;
+            color: white;
+            font-size: 18px;
+            margin-top: 15px;
+        }
+
+        #result {
+            font-weight: bold;
+            margin-top: 20px;
+            transition: color 0.3s ease;
+        }
+
+        #restart-button {
+            display: none;
+            background-color: #FAC898;
+            color: black;
+            padding: 12px;
+            border: 2px solid black;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="glow1" style="color: #e1a50d">The Thousandfold Treasure:</h1>
+        <h1 class="glow2" style="color: #de3535;">Gatekeeper's Challenge!</h1>
+        <p>You're a treasure hunter searching for a legendary treasure hidden deep within a vast mountain range. A mystical gatekeeper controls access to the treasure chamber, and to proceed, you must solve a magical number puzzle.
+            <br>The gatekeeper gives you a hint: <strong>"The number that unlocks the treasure is somewhere between <strong style="color: red;">1 and 1000.</strong>"</strong> However, you have <strong style="color: red;">10 attempts</strong> to guess the number before the entrance to the chamber seals forever, leaving the treasure beyond your reach.
+            <br>But be careful! The gatekeeper grows impatient with each incorrect guess, and if you use all your attempts, the treasure remains locked away <strong style="color: red;">for another 100 years.</strong></p>
+
+        <!-- Input and Output Section -->
+        <input id="guess" type="number" placeholder="Enter your guess" />
+        <button id="guess-button"><strong>Try Your Luck :)</strong></button>
+        <p id="result"></p>
+        <button id="restart-button"><strong>Restart Game?</strong></button>
+    </div>
+
+    <!-- PyScript to handle the game logic -->
+    <py-script>
+        import random
+        from js import document
+
+        # Initialize game variables
+        number_to_guess = random.randint(1, 1000)
+        max_attempts = 10
+        attempts = 0
+        game_over = False  # New flag to check if the game is over
+
+        # Function to reset the game
+        def reset_game(e):
+            global number_to_guess, attempts, game_over
+            number_to_guess = random.randint(1, 1000)  # New random number
+            attempts = 0  # Reset attempts
+            game_over = False  # Reset game over flag
+            document.getElementById("result").innerHTML = ""  # Clear result message
+            document.getElementById("guess").value = ""  # Clear input
+            document.getElementById("guess-button").style.display = "inline"  # Show guess button
+            document.getElementById("guess").style.display = "inline"  # Show guess input
+            document.getElementById("restart-button").style.display = "none"  # Hide restart button
+
+        # Function to handle the guessing logic
+        def check_guess(guess):
+            global attempts, game_over
+            attempts += 1
+            result = ""
+
+            if game_over:
+                return "The game is over! Do you want to restart?"
+
+            if guess < 1 or guess > 1000:
+                result = "Please enter a number between 1 and 1000."
+                document.getElementById('result').style.color = "red"
+            elif attempts > max_attempts:
+                result = f"Sorry! You've used all your attempts. The number was {number_to_guess}."
+                document.getElementById('result').style.color = "red"
+                game_over = True
+                document.getElementById("guess-button").style.display = "none"  # Hide guess button
+                document.getElementById("guess").style.display = "none"  # Hide input
+                document.getElementById("restart-button").style.display = "inline"  # Show restart button
+            elif guess < number_to_guess:
+                result = "The number lies higher in the mountains (too low)!"
+                document.getElementById('result').style.color = "red"
+            elif guess > number_to_guess:
+                result = "You're reaching too far into the sky (too high)!"
+                document.getElementById('result').style.color = "red"
+            else:
+                result = f"Huzzah! With {attempts} attempts, you uncovered the magic number {number_to_guess} and unlocked the treasure, congratulations!"
+                document.getElementById('result').style.color = "green"
+                game_over = True
+                document.getElementById("guess-button").style.display = "none"  # Hide guess button
+                document.getElementById("guess").style.display = "none"  # Hide input
+                document.getElementById("restart-button").style.display = "inline"  # Show restart button
+
+            # Last warning when only one attempt remains
+            if attempts == max_attempts - 1 and guess != number_to_guess:
+                result += "<br><strong>Last chance, adventurer! You have 1 attempt left.</strong>"
+                document.getElementById('result').style.color = "orange"
+
+            if attempts == max_attempts and guess != number_to_guess:
+                result = f"The gatekeeper smirks as the door closes. The number was {number_to_guess}."
+                document.getElementById('result').style.color = "red"
+                game_over = True
+                document.getElementById("guess-button").style.display = "none"  # Hide guess button
+                document.getElementById("guess").style.display = "none"  # Hide input
+                document.getElementById("restart-button").style.display = "inline"  # Show restart button
+
+            difference = abs(guess - number_to_guess)
+            if difference > 50:
+                clue = "But you're getting closer!"
+            elif difference > 20:
+                clue = "You're very close!"
+            elif difference > 10:
+                clue = "You're almost there!"
+            else:
+                clue = "You're extremely close!"
+
+            if not game_over and guess != number_to_guess:
+                result += f"<br>{clue}"
+
+
+            return result
+
+        # Function that will handle the button click event
+        def on_click(e):
+            guess_input = document.getElementById("guess").value  # Get the user's guess
+            if guess_input.isdigit() and not game_over:
+                guess = int(guess_input)
+                result_text = check_guess(guess)
+            else:
+                result_text = "That's not a number."
+                document.getElementById('result').style.color = "red"
+            
+            # Display the result in the HTML
+            document.getElementById('result').innerHTML = result_text
+
+        # Attach the onclick event to the buttons
+        document.getElementById("guess-button").onclick = on_click
+        document.getElementById("restart-button").onclick = reset_game
+    </py-script>
+</body>
+</html>
