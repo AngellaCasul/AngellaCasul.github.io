@@ -259,8 +259,14 @@
     
             # Putting the clues
             difference = abs(guess - number_to_guess)
-            if difference > 50:
+            if difference > 100:
+                clue = "That's too far!"
+            elif difference > 80:
+                clue = "You're getting farther from the number!"
+            elif difference > 50:
                 clue = "Don't worry, you're getting there!"
+            elif difference > 30:
+                clue = "Don't give up! You can do it!"
             elif difference > 20:
                 clue = "Almost there..."
             elif difference > 10:
