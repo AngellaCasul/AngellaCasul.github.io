@@ -257,10 +257,9 @@
             document.getElementById("guess").style.display = "none"  # Hide input
             document.getElementById("restart-button").style.display = "inline"  # Show restart button
 
+        # Putting the clues
         difference = abs(guess - number_to_guess)
-        if difference > 50:
-            clue = "But you're getting closer!"
-        elif difference > 20:
+        if difference > 20:
             clue = "You're quite near!"
         elif difference > 10:
             clue = "You're really close!"
