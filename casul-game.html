@@ -172,10 +172,10 @@
                 document.getElementById("guess").style.display = "none"  # Hide input
                 document.getElementById("restart-button").style.display = "inline"  # Show restart button
             elif guess < number_to_guess:
-                result = "The number lies higher in the mountains (too low)!."
+                result = "The number lies higher in the mountains (too low)!"
                 document.getElementById('result').style.color = "red"
             elif guess > number_to_guess:
-                result = "You're reaching too far into the sky (too high)!."
+                result = "You're reaching too far into the sky (too high)!"
                 document.getElementById('result').style.color = "red"
             else:
                 result = f"Huzzah! With {attempts} leaves, you uncovered the magic number {number_to_guess} and unlocked the treasure, congratulations!"
