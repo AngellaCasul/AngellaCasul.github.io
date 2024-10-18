@@ -39,6 +39,18 @@
             text-shadow: 0 0 15px #ad1212;
         }
 
+        .difficulty-levels {
+            background-color: #584935;
+            margin-left: 10px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            height: 81vh;
+            width: 100%;
+            border: 2px solid rgb(45, 35, 25);
+        }
+
         input {
             width: 500px;
             padding: 10px;
@@ -72,6 +84,20 @@
             color: white;
             font-size: 18px;
             margin-top: 15px;
+        }
+
+        #difficulty {
+            text-align: center;
+            font-weight: bold;
+            background-color: #7c6749;
+            color: black;
+            padding: 12px;
+            border: 2px solid black;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 250px;
         }
 
         #result {
@@ -112,112 +138,147 @@
         <h1 class="glow1" style="color: #e1a50d">The Thousandfold Treasure:</h1>
         <h1 class="glow2" style="color: #de3535;">Gatekeeper's Challenge!</h1>
         <p>You're a treasure hunter searching for a legendary treasure hidden deep within a vast mountain range. A mystical gatekeeper controls access to the treasure chamber, and to proceed, you must solve a magical number puzzle.
-            <br>The gatekeeper gives you a hint: <strong>"The number that unlocks the treasure is somewhere between <strong style="color: red;">1 and 1000.</strong>"</strong> However, you have <strong style="color: greenyellow;">10 leaves</strong> to guess the number before the entrance to the chamber seals forever, leaving the treasure beyond your reach.
+            <br>The gatekeeper gives you a hint: <strong>"The number that unlocks the treasure is somewhere between <strong style="color: red;">1 and 1000.</strong>"</strong> However, you have a total of <strong style="color: greenyellow;">15 leaves</strong> to guess the number before the entrance to the chamber seals forever, leaving the treasure beyond your reach.
             <br>But be careful! The gatekeeper grows impatient with each incorrect guess, and if you use all your leaves, the treasure remains locked away <strong style="color: red;">for another 100 years.</strong></p>
-
+        <!-- Add difficulty selection dropdown in your HTML -->
+        <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+            <option value="hardest">Hardest</option>
+        </select>
         <!-- Input and Output Section -->
         <input id="guess" type="number" placeholder="Enter your guess" />
         <button id="guess-button"><strong>Try Your Luck :)</strong></button>
         <p id="result"></p>
-        <p id="attempts" style="color: greenyellow;">Leaves left: 10</p> <!-- Updated to show leaves left -->
+        <p id="attempts" style="color: greenyellow;">Leaves left: 15</p> <!-- Updated to show leaves left -->
         <button id="restart-button"><strong>Restart Game?</strong></button>
     </div>
 
+    <div class="difficulty-levels">
+        <h1 style="color: #e1a50d;">Difficulty Guide:</h1>
+        <p style="text-align: left;"><strong style="color: greenyellow;">Easy: </strong>max attempts: 15; numbers: 1-100</p>
+        <p style="text-align: left;"><strong style="color: orange;">Medium: </strong>max attempts: 10; numbers: 1-500</p>
+        <p style="text-align: left;"><strong style="color: red;">Hard: </strong>max attempts: 10; numbers: 1-1000</p>
+        <p style="text-align: left;"><strong style="color: rgb(181, 0, 0);">Hardest: </strong>max attempts: 5; numbers: 1-1000</p>
+    </div>
+
     <!-- PyScript to handle the game logic -->
-    <py-script>
-        import random
-        from js import document
+<py-script>
+    import random
+    from js import document
 
-        # Initialize game variables
-        number_to_guess = random.randint(1, 1000)
-        max_attempts = 10
-        attempts = 0
-        game_over = False  # New flag to check if the game is over
+    # Initialize game variables
+    number_to_guess = random.randint(1, 1000)
+    max_attempts = 10
+    attempts = 0
+    game_over = False  # New flag to check if the game is over
 
-        # Function to reset the game
-        def reset_game(e):
-            global number_to_guess, attempts, game_over
-            number_to_guess = random.randint(1, 1000)  # New random number
-            attempts = 0  # Reset attempts
-            game_over = False  # Reset game over flag
-            document.getElementById("result").innerHTML = ""  # Clear result message
-            document.getElementById("guess").value = ""  # Clear input
-            document.getElementById("guess-button").style.display = "inline"  # Show guess button
-            document.getElementById("guess").style.display = "inline"  # Show guess input
-            document.getElementById("restart-button").style.display = "none"  # Hide restart button
-            document.getElementById("attempts").innerHTML = "Leaves left: 10"  # Reset leaves display
-            document.getElementById("guess").style.border = "1px solid #ccc";  # Reset border color
+    # Function to set difficulty levels
+    def set_difficulty(level):
+        global max_attempts, number_to_guess
+        if level == "easy":
+            max_attempts = 15
+            number_to_guess = random.randint(1, 100)  # Wide range
+        elif level == "medium":
+            max_attempts = 10
+            number_to_guess = random.randint(1, 500)  # Standard range
+        elif level == "hard":
+            max_attempts = 10
+            number_to_guess = random.randint(1, 1000)  # Narrow range
+        elif level == "hardest":
+            max_attempts = 5
+            number_to_guess = random.randint(1, 1000)  # Narrow range but harder
+            
+        reset_game(None)  # Reset the game to apply the new difficulty
 
-        # Function to handle the guessing logic
-        def check_guess(guess):
-            global attempts, game_over
-            attempts += 1
-            result = ""
+    # Function to reset the game
+    def reset_game(e):
+        global number_to_guess, attempts, game_over
+        number_to_guess = random.randint(1, 1000)  # New random number
+        attempts = 0  # Reset attempts
+        game_over = False  # Reset game over flag
+        document.getElementById("result").innerHTML = ""  # Clear result message
+        document.getElementById("guess").value = ""  # Clear input
+        document.getElementById("guess-button").style.display = "inline"  # Show guess button
+        document.getElementById("guess").style.display = "inline"  # Show guess input
+        document.getElementById("restart-button").style.display = "none"  # Hide restart button
+        document.getElementById("attempts").innerHTML = f"Leaves left: {max_attempts}"  # Reset leaves display
+        document.getElementById("guess").style.border = "1px solid #ccc";  # Reset border color
 
-            # Calculate leaves left
-            leaves_left = max_attempts - attempts
-            document.getElementById("attempts").innerHTML = f"Leaves left: {leaves_left}"
+    # Function to handle the guessing logic
+    def check_guess(guess):
+        global attempts, game_over
+        attempts += 1
+        result = ""
 
-            if game_over:
-                return "The game is over! Do you want to restart?"
+        # Calculate leaves left
+        leaves_left = max_attempts - attempts
+        document.getElementById("attempts").innerHTML = f"Leaves left: {leaves_left}"
 
-            if guess < 1 or guess > 1000:
-                result = "Please enter a number between 1 and 1000."
-                document.getElementById('result').style.color = "red"
-            elif attempts >= max_attempts:
-                result = f"Sorry! You've used all your leaves. The number was {number_to_guess}."
-                document.getElementById('result').style.color = "red"
-                game_over = True
-                document.getElementById("guess-button").style.display = "none"  # Hide guess button
-                document.getElementById("guess").style.display = "none"  # Hide input
-                document.getElementById("restart-button").style.display = "inline"  # Show restart button
-            elif guess < number_to_guess:
-                result = "The number lies higher in the mountains (too low)!"
-                document.getElementById('result').style.color = "red"
-            elif guess > number_to_guess:
-                result = "You're reaching too far into the sky (too high)!"
-                document.getElementById('result').style.color = "red"
-            else:
-                result = f"Huzzah! With {attempts} leaves, you uncovered the magic number {number_to_guess} and unlocked the treasure, congratulations!"
-                document.getElementById('result').style.color = "green"
-                game_over = True
-                document.getElementById("guess-button").style.display = "none"  # Hide guess button
-                document.getElementById("guess").style.display = "none"  # Hide input
-                document.getElementById("restart-button").style.display = "inline"  # Show restart button
+        if game_over:
+            return "The game is over! Do you want to restart?"
 
-            # Last warning when only one attempt remains
-            if leaves_left == 1 and guess != number_to_guess:
-                result += "<br><strong>Last chance, adventurer! You have 1 leaf left.</strong>"
-                document.getElementById('result').style.color = "orange"
+        if guess < 1 or guess > 1000:
+            result = "Please enter a number between 1 and 1000."
+            document.getElementById('result').style.color = "red"
+        elif attempts >= max_attempts:
+            result = f"Sorry! You've used all your leaves. The number was {number_to_guess}."
+            document.getElementById('result').style.color = "red"
+            game_over = True
+            document.getElementById("guess-button").style.display = "none"  # Hide guess button
+            document.getElementById("guess").style.display = "none"  # Hide input
+            document.getElementById("restart-button").style.display = "inline"  # Show restart button
+        elif guess < number_to_guess:
+            result = "The number lies higher in the mountains (too low)!"
+            document.getElementById('result').style.color = "red"
+        elif guess > number_to_guess:
+            result = "You're reaching too far into the sky (too high)!"
+            document.getElementById('result').style.color = "red"
+        else:
+            result = f"Huzzah! With {attempts} leaves, you uncovered the magic number {number_to_guess} and unlocked the treasure, congratulations!"
+            document.getElementById('result').style.color = "green"
+            game_over = True
+            document.getElementById("guess-button").style.display = "none"  # Hide guess button
+            document.getElementById("guess").style.display = "none"  # Hide input
+            document.getElementById("restart-button").style.display = "inline"  # Show restart button
 
-            # Set final message when attempts are exhausted
-            if attempts >= max_attempts and guess != number_to_guess:
-                result = f"The gatekeeper smirks as the door closes. The number was {number_to_guess}."
-                document.getElementById('result').style.color = "red"
-                game_over = True
-                document.getElementById("guess-button").style.display = "none"  # Hide guess button
-                document.getElementById("guess").style.display = "none"  # Hide input
-                document.getElementById("restart-button").style.display = "inline"  # Show restart button
+        # Last warning when only one attempt remains
+        if leaves_left == 1 and guess != number_to_guess:
+            result += "<br><strong>Last chance, adventurer! You have 1 leaf left.</strong>"
+            document.getElementById('result').style.color = "orange"
 
-            difference = abs(guess - number_to_guess)
-            if difference > 50:
-                clue = "But you're getting closer!"
-            elif difference > 20:
-                clue = "You're quite near!"
-            elif difference > 10:
-                clue = "You're really close!"
-            else:
-                clue = "You're extremely close!"
+        # Set final message when attempts are exhausted
+        if attempts >= max_attempts and guess != number_to_guess:
+            result = f"The gatekeeper smirks as the door closes. The number was {number_to_guess}."
+            document.getElementById('result').style.color = "red"
+            game_over = True
+            document.getElementById("guess-button").style.display = "none"  # Hide guess button
+            document.getElementById("guess").style.display = "none"  # Hide input
+            document.getElementById("restart-button").style.display = "inline"  # Show restart button
 
-            if not game_over and guess != number_to_guess:
-                result += f"<br>{clue}"
+        difference = abs(guess - number_to_guess)
+        if difference > 50:
+            clue = "But you're getting closer!"
+        elif difference > 20:
+            clue = "You're quite near!"
+        elif difference > 10:
+            clue = "You're really close!"
+        else:
+            clue = "You're extremely close!"
 
-            # Update the result in the HTML
-            document.getElementById("result").innerHTML = result
+        if not game_over and guess != number_to_guess:
+            result += f"<br>{clue}"
 
-        # Attach event listeners to button clicks
-        document.getElementById("guess-button").onclick = lambda e: check_guess(int(document.getElementById("guess").value))
-        document.getElementById("restart-button").onclick = reset_game
-    </py-script>
+        # Update the result in the HTML
+        document.getElementById("result").innerHTML = result
+
+    # Attach event listeners to button clicks
+    document.getElementById("guess-button").onclick = lambda e: check_guess(int(document.getElementById("guess").value))
+    document.getElementById("restart-button").onclick = reset_game
+
+    # Attach event listener to difficulty selector
+    document.getElementById("difficulty").onchange = lambda e: set_difficulty(document.getElementById("difficulty").value)
+</py-script>
 </body>
 </html>
